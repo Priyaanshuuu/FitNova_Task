@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { connectDB } from "@/lib/database/mongodb";
+import { ApiResponse } from "@/lib/utils/response";
+import { Logger } from "@/lib/utils/logger";
 import { CallService } from "@/services/call.service";
 
 interface RouteContext {
@@ -10,7 +12,7 @@ interface RouteContext {
 }
 
 export async function GET(
-  request: NextRequest,
+  _: NextRequest,
   { params }: RouteContext
 ) {
   try {
@@ -18,40 +20,30 @@ export async function GET(
 
     const { id } = await params;
 
+    Logger.info(`Fetching call: ${id}`);
+
     const call = await CallService.findById(id);
 
     if (!call) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Call not found.",
-        },
-        {
-          status: 404,
-        }
+      return ApiResponse.error(
+        "Call not found.",
+        404
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: call,
-      },
-      {
-        status: 200,
-      }
+    return ApiResponse.success(
+      call,
+      "Call fetched successfully."
     );
   } catch (error) {
-    console.error(error);
+    Logger.error(
+      "Failed to fetch call.",
+      error
+    );
 
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch call.",
-      },
-      {
-        status: 500,
-      }
+    return ApiResponse.error(
+      "Failed to fetch call.",
+      500
     );
   }
 }

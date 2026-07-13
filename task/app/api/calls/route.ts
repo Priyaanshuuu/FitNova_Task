@@ -1,34 +1,29 @@
-import { NextResponse } from "next/server";
-
 import { connectDB } from "@/lib/database/mongodb";
+import { ApiResponse } from "@/lib/utils/response";
+import { Logger } from "@/lib/utils/logger";
 import { CallService } from "@/services/call.service";
 
 export async function GET() {
   try {
     await connectDB();
 
+    Logger.info("Fetching all calls...");
+
     const calls = await CallService.findAll();
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: calls,
-      },
-      {
-        status: 200,
-      }
+    return ApiResponse.success(
+      calls,
+      "Calls fetched successfully."
     );
   } catch (error) {
-    console.error(error);
+    Logger.error(
+      "Failed to fetch calls.",
+      error
+    );
 
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch calls.",
-      },
-      {
-        status: 500,
-      }
+    return ApiResponse.error(
+      "Failed to fetch calls.",
+      500
     );
   }
 }

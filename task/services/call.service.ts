@@ -73,19 +73,33 @@ export class CallService {
     });
   }
 
-  static async findAll() {
-    return Call.find()
-      .populate("advisorId", "name email")
-      .populate("teamId", "name")
-      .sort({
-        createdAt: -1,
-      });
-  }
+static async findAll() {
+  return Call.find()
+    .populate({
+      path: "advisorId",
+      select: "name email",
+    })
+    .populate({
+      path: "teamId",
+      select: "name",
+    })
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
+}
 
 
-  static async findById(callId: string) {
-    return Call.findById(callId)
-      .populate("advisorId", "name email")
-      .populate("teamId", "name");
-  }
+ static async findById(callId: string) {
+  return Call.findById(callId)
+    .populate({
+      path: "advisorId",
+      select: "name email",
+    })
+    .populate({
+      path: "teamId",
+      select: "name",
+    })
+    .lean();
+}
 }
