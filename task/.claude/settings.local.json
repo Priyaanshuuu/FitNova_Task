@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(npx shadcn@latest add card badge input label textarea table tabs progress separator)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

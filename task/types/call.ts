@@ -1,3 +1,7 @@
+import type { Types } from "mongoose";
+import type { ICallAnalysis } from "./analysis";
+import type { ITranscriptSegment } from "./transcript";
+
 export enum ProcessingStatus {
   UPLOADED = "UPLOADED",
   TRANSCRIBING = "TRANSCRIBING",
@@ -10,8 +14,8 @@ export enum ProcessingStatus {
 export interface ICall {
   _id?: string;
 
-  advisorId: string;
-  teamId: string;
+  advisorId: Types.ObjectId;
+  teamId: Types.ObjectId;
 
   audioUrl: string;
   duration?: number;
@@ -20,9 +24,9 @@ export interface ICall {
 
   transcript?: string;
 
-  diarizedTranscript?: string;
+  diarizedTranscript?: ITranscriptSegment[];
 
-  analysis?: string;
+  analysis?: ICallAnalysis;
 
   createdAt?: Date;
   updatedAt?: Date;
